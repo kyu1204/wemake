@@ -3,6 +3,7 @@ import { Button } from "../components/ui/button";
 import { ProductCard } from "~/features/products/components/product-card";
 import { PostCard } from "~/features/community/components/post-card";
 import { IdeaCard } from "~/features/ideas/components/idea-card";
+import { JobCard } from "~/features/jobs/components/job-card";
 
 export const meta: MetaFunction = () => {
   return [
@@ -84,6 +85,32 @@ export default function HomePage() {
             createdAt="12 hours ago"
             likeCount={Math.floor(Math.random() * 100)}
             claimed={index % 2 === 0}
+          />
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-5xl font-bold leading-tight tracking-tighter">
+            Latest Jobs
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            Find your dream job.
+          </p>
+          <Button variant="link" asChild className="text-lg p-0">
+            <Link to="/jobs">Explore all jobs &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 11 }, (_, index) => (
+          <JobCard
+            id="jobId"
+            company="Meta"
+            companyLogoUrl="https://github.com/facebook.png"
+            companyHq="San Francisco, CA"
+            title="Software Engineer"
+            postedAt="12 hours ago"
+            type="Full-time"
+            positionLocation="Remote"
+            salary="$100,000 - $120,000"
           />
         ))}
       </div>
