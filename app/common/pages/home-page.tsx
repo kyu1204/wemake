@@ -1,13 +1,10 @@
 import { Link, type MetaFunction } from "react-router";
-import { Button } from "../components/ui/button";
-import { ProductCard } from "~/features/products/components/product-card";
 import { PostCard } from "~/features/community/components/post-card";
 import { IdeaCard } from "~/features/ideas/components/idea-card";
 import { JobCard } from "~/features/jobs/components/job-card";
-import { Card, CardHeader, CardTitle, CardFooter } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { ProductCard } from "~/features/products/components/product-card";
 import { TeamCard } from "~/features/teams/components/team-card";
+import { Button } from "../components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
