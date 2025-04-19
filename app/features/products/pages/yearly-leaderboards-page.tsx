@@ -1,26 +1,111 @@
-import type { MetaFunction } from "react-router";
-import type { Route } from "../+types";
+import { DateTime } from "luxon";
+import type { Route } from "./+types/yearly-leaderboards-page";
+import { data, isRouteErrorResponse, Link } from "react-router";
+import { z } from "zod";
+import { Hero } from "~/common/components/hero";
+import { ProductCard } from "../components/product-card";
+import { Button } from "~/common/components/ui/button";
+import ProductPagination from "~/common/components/pagination";
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Yearly Leaderboards | wemake" },
-    { name: "description", content: "Yearly product leaderboards on wemake" },
-  ];
-};
+const paramsSchema = z.object({
+  year: z.coerce.number(),
+});
 
-export function loader({ params }: Route.LoaderArgs) {
+export const loader = ({ params }: Route.LoaderArgs) => {
+  const { success, data: parsedData } = paramsSchema.safeParse(params);
+
+  if (!success) {
+    throw data(
+      { error_code: "invalid params", message: "Invalid params" },
+      { status: 400 }
+    );
+  }
+
+  const date = DateTime.fromObject({
+    year: parsedData.year,
+  });
+
+  if (!date.isValid) {
+    throw data(
+      { error_code: "invalid date", message: "Invalid date" },
+      { status: 400 }
+    );
+  }
+  const today = DateTime.now().startOf("year");
+  if (date > today) {
+    throw data(
+      { error_code: "future date", message: "Future date" },
+      { status: 400 }
+    );
+  }
+
   return {
-    year: params.year,
+    ...parsedData,
   };
-}
+};
 
 export default function YearlyLeaderboardsPage({
   loaderData,
 }: Route.ComponentProps) {
+  const urlDate = DateTime.fromObject({
+    year: loaderData.year,
+  });
+  const previousYear = urlDate.minus({ year: 1 });
+  const nextYear = urlDate.plus({ year: 1 });
+  const isStartOfYear = urlDate.equals(DateTime.now().startOf("year"));
+
   return (
-    <div className="container py-10 space-y-6">
-      <h1 className="text-4xl font-bold">Top Products of {loaderData.year}</h1>
-      {/* 실제 구현시 데이터를 로드하여 표시 */}
+    <div className="space-y-10">
+      <Hero
+        title={`Best of ${urlDate.startOf("year").toLocaleString({
+          year: "numeric",
+        })}`}
+      />
+      <div className="flex items-center gap-2 justify-center">
+        <Button variant="secondary" asChild>
+          <Link to={`/products/leaderboards/yearly/${previousYear.year}`}>
+            &larr; {previousYear.toLocaleString({ year: "numeric" })}
+          </Link>
+        </Button>
+        {!isStartOfYear && (
+          <Button variant="secondary" asChild>
+            <Link to={`/products/leaderboards/yearly/${nextYear.year}`}>
+              {nextYear.toLocaleString({ year: "numeric" })}
+              &rarr;
+            </Link>
+          </Button>
+        )}
+      </div>
+      <div className="space-y-5 w-full max-w-screen-md mx-auto">
+        {Array.from({ length: 11 }, (_, index) => (
+          <ProductCard
+            key={index}
+            id={`product-${index}`}
+            name={`Product ${index + 1}`}
+            description={`Description for product ${index + 1}`}
+            commentCount={Math.floor(Math.random() * 100)}
+            viewCount={Math.floor(Math.random() * 1000)}
+            upvoteCount={Math.floor(Math.random() * 500)}
+          />
+        ))}
+      </div>
+      <ProductPagination totalPages={10} />
     </div>
   );
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        {error.data.message} / {error.data.error_code}
+      </div>
+    );
+  }
+
+  if (error instanceof Error) {
+    return <div>{error.message}</div>;
+  }
+
+  return <div>Unknown error</div>;
 }
