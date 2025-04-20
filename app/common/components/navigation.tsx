@@ -1,18 +1,16 @@
+import {
+  BarChart3Icon,
+  BellIcon,
+  LogOutIcon,
+  MessageCircleIcon,
+  SettingsIcon,
+  UserIcon,
+} from "lucide-react";
 import { Link } from "react-router";
 import { Separator } from "~/common/components/ui/separator";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "./ui/navigation-menu";
 import { cn } from "~/lib/utils";
-import { Button } from "./ui/button";
-
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,13 +21,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import {
-  BarChart3Icon,
-  UserIcon,
-  SettingsIcon,
-  LogOutIcon,
-  BellIcon,
-  MessageCircleIcon,
-} from "lucide-react";
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "./ui/navigation-menu";
 
 const menus = [
   {
@@ -173,14 +172,13 @@ export default function Navigation({
                           <NavigationMenuItem
                             key={item.name}
                             className={cn([
-                              "select-none rounded-md transition-colors",
-                              item.to === "/products/promote" &&
-                                "col-span-2 bg-primary/10 [&_a]:hover:bg-primary/20 [&_a]:focus:bg-primary/20",
-                              item.to === "/jobs/submit" &&
-                                "col-span-2 bg-primary/10 [&_a]:hover:bg-primary/20 [&_a]:focus:bg-primary/20",
+                              "select-none rounded-md transition-colors focus:bg-accent  hover:bg-accent",
+                              (item.to === "/products/promote" ||
+                                item.to === "/jobs/submit") &&
+                                "col-span-2 bg-primary/10 hover:bg-primary/20 focus:bg-primary/20",
                             ])}
                           >
-                            <NavigationMenuLink asChild>
+                            <NavigationMenuLink>
                               <Link
                                 className="p-3 space-y-1 block leading-none no-underline outline-none"
                                 to={item.to}
@@ -209,12 +207,12 @@ export default function Navigation({
         </NavigationMenu>
       </div>
       {isLoggedIn ? (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Button size="icon" variant="ghost" asChild className="relative">
             <Link to="/my/notifications">
               <BellIcon className="size-4" />
               {hasNotifications && (
-                <div className="absolute top-1.5 right-1.5 bg-red-500  rounded-full size-2" />
+                <div className="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full" />
               )}
             </Link>
           </Button>
@@ -222,14 +220,14 @@ export default function Navigation({
             <Link to="/my/messages">
               <MessageCircleIcon className="size-4" />
               {hasMessages && (
-                <div className="absolute top-1.5 right-1.5 bg-red-500  rounded-full size-2" />
+                <div className="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full" />
               )}
             </Link>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar>
-                <AvatarImage src="https://github.com/kyu1204.png" />
+                <AvatarImage src="https://github.com/serranoarevalo.png" />
                 <AvatarFallback>N</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
@@ -246,7 +244,6 @@ export default function Navigation({
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
-
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/my/profile">
                     <UserIcon className="size-4 mr-2" />
@@ -272,7 +269,7 @@ export default function Navigation({
         </div>
       ) : (
         <div className="flex items-center gap-4">
-          <Button asChild variant="outline">
+          <Button asChild variant="secondary">
             <Link to="/auth/login">Login</Link>
           </Button>
           <Button asChild>

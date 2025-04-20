@@ -7,10 +7,10 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { Settings } from "luxon";
 import type { Route } from "./+types/root";
 import "./app.css";
 import Navigation from "./common/components/navigation";
-import { Settings } from "luxon";
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -49,9 +49,9 @@ export default function App() {
   return (
     <div className="py-28">
       <Navigation
-        isLoggedIn={true}
-        hasNotifications={true}
-        hasMessages={true}
+        isLoggedIn={false}
+        hasNotifications={false}
+        hasMessages={false}
       />
       <Outlet />
     </div>
