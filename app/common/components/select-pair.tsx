@@ -17,7 +17,7 @@ export default function SelectPair({
   options,
 }: {
   name: string;
-  required: boolean;
+  required?: boolean;
   label: string;
   description: string;
   placeholder: string;
