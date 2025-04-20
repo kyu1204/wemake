@@ -1,26 +1,39 @@
-import type { MetaFunction } from "react-router";
-import type { Route } from "../+types";
+import { Hero } from "~/common/components/hero";
+import ProductPagination from "~/common/components/pagination";
+import { ProductCard } from "../components/product-card";
+import type { Route } from "./+types/category-page";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ params }: Route.MetaArgs) => {
   return [
-    { title: "Category | wemake" },
-    { name: "description", content: "Browse products in this category" },
+    { title: "Developer Tools | wemake" },
+    {
+      name: "description",
+      content: "Tools for developers to build products faster",
+    },
   ];
 };
 
-export function loader({ params }: Route.LoaderArgs) {
-  return {
-    category: params.category,
-  };
-}
-
-export default function CategoryPage({ loaderData }: Route.ComponentProps) {
+export default function CategoryPage() {
   return (
-    <div className="container py-10 space-y-6">
-      <h1 className="text-4xl font-bold capitalize">{loaderData.category}</h1>
-      <div className="grid grid-cols-3 gap-4">
-        {/* 실제 구현시 해당 카테고리의 제품들을 로드하여 표시 */}
+    <div className="space-y-10">
+      <Hero
+        title="Developer Tools"
+        subtitle="Tools for developers to build products faster"
+      />
+      <div className="space-y-5 w-full max-w-screen-md mx-auto">
+        {Array.from({ length: 11 }, (_, index) => (
+          <ProductCard
+            key={index}
+            id={`product-${index}`}
+            name={`Product ${index + 1}`}
+            description={`Description for product ${index + 1}`}
+            commentCount={Math.floor(Math.random() * 100)}
+            viewCount={Math.floor(Math.random() * 1000)}
+            upvoteCount={Math.floor(Math.random() * 500)}
+          />
+        ))}
       </div>
+      <ProductPagination totalPages={10} />
     </div>
   );
 }
