@@ -1,30 +1,33 @@
-interface LoaderData {
-  reviews: Array<{
-    id: string;
-    content: string;
-    rating: number;
-  }>;
-}
+import { Button } from "~/common/components/ui/button";
+import { ReviewCard } from "../components/review-card";
 
-export function loader({ params }: Route.LoaderArgs) {
-  // 실제 구현에서는 Supabase에서 리뷰 데이터를 가져옵니다
-  return {
-    reviews: [
-      { id: "1", content: "좋은 제품입니다", rating: 5 },
-      { id: "2", content: "만족스럽습니다", rating: 4 },
-    ],
-  };
-}
-
-export function Component({ loaderData }: Route.ComponentProps<LoaderData>) {
-  const { reviews } = loaderData;
-
-  return <div className="space-y-4"></div>;
-}
-
-export function meta(): Route.MetaFunction {
+export function meta() {
   return [
-    { title: "제품 리뷰" },
-    { name: "description", content: "제품에 대한 사용자 리뷰" },
+    { title: "Product Reviews | wemake" },
+    { name: "description", content: "View product reviews" },
   ];
+}
+
+export default function ProductReviewsPage() {
+  return (
+    <div className="space-y-10 max-w-xl">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">10 Reviews</h2>
+        <Button variant="secondary">Write a review</Button>
+      </div>
+      <div className="space-y-20">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <ReviewCard
+            key={index}
+            handle="John Doe"
+            username="username"
+            avatarUrl="https://github.com/shadcn.png"
+            rating={5}
+            content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos."
+            postedAt="10 days ago"
+          />
+        ))}
+      </div>
+    </div>
+  );
 }

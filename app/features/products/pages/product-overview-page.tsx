@@ -1,8 +1,3 @@
-import { ChevronUpIcon, StarIcon } from "lucide-react";
-import { Link } from "react-router";
-import { Button } from "~/common/components/ui/button";
-import type { Route } from "./+types/product-overview-page";
-
 export function meta() {
   return [
     { title: "Product Overview | wemake" },
@@ -10,7 +5,7 @@ export function meta() {
   ];
 }
 
-export default function ProductOverviewPage({ params }: Route.LoaderArgs) {
+export default function ProductOverviewPage() {
   return (
     <div className="space-y-10">
       <div className="space-y-1">
