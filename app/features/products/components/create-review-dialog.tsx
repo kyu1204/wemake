@@ -40,7 +40,7 @@ export function CreateReviewDialog() {
                 key={star}
                 className="relative"
                 onMouseEnter={() => setHoveredRating(star)}
-                onMouseLeave={() => setHoveredRating(star)}
+                onMouseLeave={() => setHoveredRating(0)}
               >
                 <StarIcon
                   className="size-5 text-yellow-400"
@@ -70,9 +70,7 @@ export function CreateReviewDialog() {
           placeholder="Write your review here"
         />
         <DialogFooter>
-          <Button type="submit" className="cursor-pointer">
-            Submit Review
-          </Button>
+          <Button type="submit">Submit Review</Button>
         </DialogFooter>
       </Form>
     </DialogContent>

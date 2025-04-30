@@ -24,9 +24,7 @@ export default function ProductReviewsPage() {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">10 Reviews</h2>
           <DialogTrigger>
-            <Button variant="secondary" className="cursor-pointer">
-              Write a review
-            </Button>
+            <Button variant="secondary">Write a review</Button>
           </DialogTrigger>
         </div>
         <div className="space-y-20">
