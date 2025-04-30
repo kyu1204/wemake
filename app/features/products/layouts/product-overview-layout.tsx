@@ -26,11 +26,11 @@ export default function ProductOverviewLayout() {
           <Button
             variant={"secondary"}
             size="lg"
-            className="text-lg h-14 px-10"
+            className="text-lg h-14 px-10 cursor-pointer"
           >
             Visit Website
           </Button>
-          <Button size="lg" className="text-lg h-14 px-10">
+          <Button size="lg" className="text-lg h-14 px-10 cursor-pointer">
             <ChevronUpIcon className="size-4" />
             Upvote (100)
           </Button>
