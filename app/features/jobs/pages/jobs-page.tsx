@@ -6,12 +6,10 @@ import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGES } from "../constants";
 import { Link, useSearchParams } from "react-router";
 import { cn } from "~/lib/utils";
 
-export function meta({}: Route.MetaFunction) {
-  return [
-    { title: "Jobs | wemake" },
-    { description: "Find your dream job at wemake" },
-  ];
-}
+export const meta: Route.MetaFunction = () => [
+  { title: "Jobs | wemake" },
+  { description: "Find your dream job at wemake" },
+];
 
 export default function JobsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
