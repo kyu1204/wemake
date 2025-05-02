@@ -103,6 +103,7 @@ export default function HomePage() {
         </div>
         {Array.from({ length: 11 }, (_, index) => (
           <JobCard
+            key={index}
             id="jobId"
             company="Meta"
             companyLogoUrl="https://github.com/facebook.png"
