@@ -1,10 +1,10 @@
+import { useSearchParams } from "react-router";
 import { Hero } from "~/common/components/hero";
-import type { Route } from "./+types/jobs-page";
-import { JobCard } from "../components/job-card";
 import { Button } from "~/common/components/ui/button";
-import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGES } from "../constants";
-import { Link, useSearchParams } from "react-router";
 import { cn } from "~/lib/utils";
+import { JobCard } from "../components/job-card";
+import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGES } from "../constants";
+import type { Route } from "./+types/jobs-page";
 
 export const meta: Route.MetaFunction = () => [
   { title: "Jobs | wemake" },
