@@ -1,13 +1,13 @@
 import { Link } from "react-router";
+import { Badge } from "~/common/components/ui/badge";
+import { Button } from "~/common/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "~/common/components/ui/card";
-import { Button } from "~/common/components/ui/button";
-import { Badge } from "~/common/components/ui/badge";
 
 interface JobCardProps {
   id: string;

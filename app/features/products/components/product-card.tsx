@@ -1,4 +1,6 @@
+import { ChevronUpIcon, EyeIcon, MessageCircleIcon } from "lucide-react";
 import { Link } from "react-router";
+import { Button } from "~/common/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -6,8 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/common/components/ui/card";
-import { Button } from "~/common/components/ui/button";
-import { ChevronUpIcon, EyeIcon, MessageCircleIcon } from "lucide-react";
 
 interface ProductCardProps {
   id: string;

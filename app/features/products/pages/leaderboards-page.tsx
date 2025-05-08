@@ -1,8 +1,8 @@
+import { Link } from "react-router";
+import { Hero } from "~/common/components/hero";
 import { Button } from "~/common/components/ui/button";
 import { ProductCard } from "../components/product-card";
 import type { Route } from "./+types/leaderboards-page";
-import { Hero } from "~/common/components/hero";
-import { Link } from "react-router";
 
 export const meta: Route.MetaFunction = () => {
   return [

@@ -1,10 +1,10 @@
-import { Hero } from "~/common/components/hero";
-import type { Route } from "./+types/post-job-page";
 import { Form } from "react-router";
+import { Hero } from "~/common/components/hero";
 import InputPair from "~/common/components/intput-pair";
 import SelectPair from "~/common/components/select-pair";
-import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGES } from "../constants";
 import { Button } from "~/common/components/ui/button";
+import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGES } from "../constants";
+import type { Route } from "./+types/post-job-page";
 
 export const meta: Route.MetaFunction = () => [
   { title: "Post a Job | wemake" },

@@ -1,11 +1,11 @@
 import { DateTime } from "luxon";
-import type { Route } from "./+types/yearly-leaderboards-page";
 import { data, isRouteErrorResponse, Link } from "react-router";
 import { z } from "zod";
 import { Hero } from "~/common/components/hero";
-import { ProductCard } from "../components/product-card";
-import { Button } from "~/common/components/ui/button";
 import ProductPagination from "~/common/components/pagination";
+import { Button } from "~/common/components/ui/button";
+import { ProductCard } from "../components/product-card";
+import type { Route } from "./+types/yearly-leaderboards-page";
 
 const paramsSchema = z.object({
   year: z.coerce.number(),

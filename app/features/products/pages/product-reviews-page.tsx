@@ -1,14 +1,7 @@
 import { Button } from "~/common/components/ui/button";
-import { ReviewCard } from "../components/review-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from "~/common/components/ui/dialog";
+import { Dialog, DialogTrigger } from "~/common/components/ui/dialog";
 import { CreateReviewDialog } from "../components/create-review-dialog";
+import { ReviewCard } from "../components/review-card";
 
 export function meta() {
   return [

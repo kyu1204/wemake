@@ -1,13 +1,13 @@
+import { DotIcon, EyeIcon, HeartIcon, LockIcon } from "lucide-react";
 import { Link } from "react-router";
+import { Button } from "~/common/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "~/common/components/ui/card";
-import { Button } from "~/common/components/ui/button";
-import { DotIcon, EyeIcon, HeartIcon, LockIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 interface IdeaCardProps {

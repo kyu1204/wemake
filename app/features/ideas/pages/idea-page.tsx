@@ -1,7 +1,7 @@
-import { Hero } from "~/common/components/hero";
-import type { Route } from "./+types/idea-page";
 import { DotIcon, EyeIcon, HeartIcon } from "lucide-react";
+import { Hero } from "~/common/components/hero";
 import { Button } from "~/common/components/ui/button";
+import type { Route } from "./+types/idea-page";
 
 export const meta: Route.MetaFunction = () => {
   return [
