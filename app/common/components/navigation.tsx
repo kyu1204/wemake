@@ -226,15 +226,15 @@ export default function Navigation({
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Avatar>
-                <AvatarImage src="https://github.com/serranoarevalo.png" />
+              <Avatar className="cursor-pointer">
+                <AvatarImage src="https://github.com/kyu1204.png" />
                 <AvatarFallback>N</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel className="flex flex-col">
-                <span className="font-medium">John Doe</span>
-                <span className="text-xs text-muted-foreground">@username</span>
+                <span className="font-medium">MINT</span>
+                <span className="text-xs text-muted-foreground">@kyu1204</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
