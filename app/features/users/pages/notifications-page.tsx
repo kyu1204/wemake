@@ -1,18 +1,5 @@
-import {
-  Card,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/common/components/ui/card";
-import type { Route } from "./+types/notifications-page";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/common/components/ui/avatar";
-import { Button } from "~/common/components/ui/button";
-import { EyeIcon } from "lucide-react";
 import { NotificationCard } from "../components/notification-card";
+import type { Route } from "./+types/notifications-page";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Notifications | wemake" }];
