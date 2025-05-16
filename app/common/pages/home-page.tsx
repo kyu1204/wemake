@@ -7,6 +7,7 @@ import { TeamCard } from "~/features/teams/components/team-card";
 import { Button } from "../components/ui/button";
 import { FlickeringGrid } from "components/magicui/flickering-grid";
 import { VelocityScroll } from "components/magicui/scroll-based-velocity";
+import { Ripple } from "components/magicui/ripple";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -104,8 +105,8 @@ export default function HomePage() {
           />
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
+      <div className="mt-44 overflow-hidden">
+        <div className="relative flex h-[700px] w-full flex-col items-center justify-center overflow-hidden bg-background">
           <h2 className="text-5xl font-bold leading-tight tracking-tighter">
             Latest Jobs
           </h2>
@@ -115,21 +116,24 @@ export default function HomePage() {
           <Button variant="link" asChild className="text-lg p-0">
             <Link to="/jobs">Explore all jobs &rarr;</Link>
           </Button>
+          <Ripple />
         </div>
-        {Array.from({ length: 11 }, (_, index) => (
-          <JobCard
-            key={index}
-            id="jobId"
-            company="Meta"
-            companyLogoUrl="https://github.com/facebook.png"
-            companyHq="San Francisco, CA"
-            title="Software Engineer"
-            postedAt="12 hours ago"
-            type="Full-time"
-            positionLocation="Remote"
-            salary="$100,000 - $120,000"
-          />
-        ))}
+        <div className="grid grid-cols-3 gap-4">
+          {Array.from({ length: 12 }, (_, index) => (
+            <JobCard
+              key={index}
+              id="jobId"
+              company="Meta"
+              companyLogoUrl="https://github.com/facebook.png"
+              companyHq="San Francisco, CA"
+              title="Software Engineer"
+              postedAt="12 hours ago"
+              type="Full-time"
+              positionLocation="Remote"
+              salary="$100,000 - $120,000"
+            />
+          ))}
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-4">
         <div>
