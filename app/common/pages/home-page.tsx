@@ -5,7 +5,8 @@ import { JobCard } from "~/features/jobs/components/job-card";
 import { ProductCard } from "~/features/products/components/product-card";
 import { TeamCard } from "~/features/teams/components/team-card";
 import { Button } from "../components/ui/button";
-
+import { FlickeringGrid } from "components/magicui/flickering-grid";
+import { VelocityScroll } from "components/magicui/scroll-based-velocity";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -15,7 +16,21 @@ export const meta: MetaFunction = () => {
 
 export default function HomePage() {
   return (
-    <div className="px-20 space-y-40">
+    <div className="px-5 space-y-40">
+      <div className="relative flex justify-center items-center h-[500px]">
+        <FlickeringGrid
+          color="#FF1F57"
+          gridGap={5}
+          className="absolute top-0 left-0 w-full h-full"
+        ></FlickeringGrid>
+        <div className="relative z-10 flex flex-col items-center">
+          <h2 className="text-8xl font-bold">welcome to wemake</h2>
+          <span className="text-5xl font-bold">the home of indie makers</span>
+        </div>
+      </div>
+      <div>
+        <VelocityScroll> 🌍 code hard 💻 travel far </VelocityScroll>
+      </div>
       <div className="grid grid-cols-3 gap-4">
         <div>
           <h2 className="text-5xl font-bold leading-tight tracking-tighter">

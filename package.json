@@ -25,6 +25,7 @@
     "isbot": "^5.1.17",
     "lucide-react": "^0.485.0",
     "luxon": "^3.6.1",
+    "motion": "^12.12.1",
     "react": "^19.0.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
