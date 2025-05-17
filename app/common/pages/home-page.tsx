@@ -5,8 +5,10 @@ import { JobCard } from "~/features/jobs/components/job-card";
 import { ProductCard } from "~/features/products/components/product-card";
 import { TeamCard } from "~/features/teams/components/team-card";
 import { Button } from "../components/ui/button";
-import { FlickeringGrid } from "components/magicui/flickering-grid";
-import { VelocityScroll } from "components/magicui/scroll-based-velocity";
+import { FlickeringGrid } from "~/common/components/magicui/flickering-grid";
+import { VelocityScroll } from "~/common/components/magicui/scroll-based-velocity";
+import { Ripple } from "~/common/components/magicui/ripple";
+import { BlurFade } from "components/magicui/blur-fade";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -43,7 +45,6 @@ export default function HomePage() {
             <Link to="/products/leaderboards">Explore all products &rarr;</Link>
           </Button>
         </div>
-
         {Array.from({ length: 11 }, (_, index) => (
           <ProductCard
             key={index}
@@ -104,32 +105,39 @@ export default function HomePage() {
           />
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <h2 className="text-5xl font-bold leading-tight tracking-tighter">
-            Latest Jobs
-          </h2>
-          <p className="text-xl font-light text-foreground">
-            Find your dream job.
-          </p>
-          <Button variant="link" asChild className="text-lg p-0">
-            <Link to="/jobs">Explore all jobs &rarr;</Link>
-          </Button>
+      <div className="md:-mt-44 overflow-hidden">
+        <BlurFade delay={0.25} inView>
+          <div className="flex h-[75vh] relative flex-col justify-center items-center text-center md:text-left">
+            <h2 className="text-5xl font-bold leading-tight tracking-tighter">
+              Latest Jobs
+            </h2>
+            <p className="text-xl font-light text-foreground">
+              Find your dream job.
+            </p>
+            <Button variant="link" asChild className="text-lg p-0">
+              <Link to="/jobs">Explore all jobs &rarr;</Link>
+            </Button>
+            <Ripple />
+          </div>
+        </BlurFade>
+        <div className="grid grid-cols-1 md:grid-cols-3 -mt-32 md:-mt-60 z-10 gap-4">
+          {Array.from({ length: 12 }, (_, index) => (
+            <BlurFade delay={0.25} inView key={index}>
+              <JobCard
+                key={index}
+                id="jobId"
+                company="Meta"
+                companyLogoUrl="https://github.com/facebook.png"
+                companyHq="San Francisco, CA"
+                title="Software Engineer"
+                postedAt="12 hours ago"
+                type="Full-time"
+                positionLocation="Remote"
+                salary="$100,000 - $120,000"
+              />
+            </BlurFade>
+          ))}
         </div>
-        {Array.from({ length: 11 }, (_, index) => (
-          <JobCard
-            key={index}
-            id="jobId"
-            company="Meta"
-            companyLogoUrl="https://github.com/facebook.png"
-            companyHq="San Francisco, CA"
-            title="Software Engineer"
-            postedAt="12 hours ago"
-            type="Full-time"
-            positionLocation="Remote"
-            salary="$100,000 - $120,000"
-          />
-        ))}
       </div>
       <div className="grid grid-cols-3 gap-4">
         <div>
