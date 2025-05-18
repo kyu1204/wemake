@@ -1,4 +1,4 @@
-import { MagicCard } from "components/magicui/magic-card";
+import { MagicCard } from "~/common/components/magicui/magic-card";
 import { Link } from "react-router";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
