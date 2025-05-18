@@ -50,6 +50,15 @@ export default function SettingsPage() {
               ]}
             />
             <InputPair
+              label="Headline"
+              description="Your public headline. It will be displayed on your profile."
+              id="headline"
+              name="headline"
+              required
+              placeholder="John Doe"
+              textarea
+            />
+            <InputPair
               label="Bio"
               description="Your public bio. It will be displayed on your profile."
               id="bio"
