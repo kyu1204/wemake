@@ -1,4 +1,3 @@
-import { MagicCard } from "~/common/components/magicui/magic-card";
 import { Link } from "react-router";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
@@ -36,43 +35,37 @@ export function JobCard({
   return (
     <Link to={`/jobs/${id}`}>
       <Card className="bg-transparent hover:bg-card/50 transition-colors">
-        <MagicCard>
-          <CardHeader>
-            <div className="flex items-center gap-4 mb-4">
-              <img
-                src={companyLogoUrl}
-                alt={company}
-                className="size-10 rounded-full"
-              />
-              <div className="space-x-2">
-                <span className="text-sm text-accent-foreground">
-                  {company}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {postedAt}
-                </span>
-              </div>
+        <CardHeader>
+          <div className="flex items-center gap-4 mb-4">
+            <img
+              src={companyLogoUrl}
+              alt={company}
+              className="size-10 rounded-full"
+            />
+            <div className="space-x-2">
+              <span className="text-sm text-accent-foreground">{company}</span>
+              <span className="text-xs text-muted-foreground">{postedAt}</span>
             </div>
-            <CardTitle>{title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Badge variant="outline">{type}</Badge>
-            <Badge variant="outline">{positionLocation}</Badge>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-muted-foreground">
-                {salary}
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">
-                {companyHq}
-              </span>
-            </div>
-            <Button variant="secondary" size="sm">
-              Apply now
-            </Button>
-          </CardFooter>
-        </MagicCard>
+          </div>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Badge variant="outline">{type}</Badge>
+          <Badge variant="outline">{positionLocation}</Badge>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-muted-foreground">
+              {salary}
+            </span>
+            <span className="text-sm font-medium text-muted-foreground">
+              {companyHq}
+            </span>
+          </div>
+          <Button variant="secondary" size="sm">
+            Apply now
+          </Button>
+        </CardFooter>
       </Card>
     </Link>
   );
