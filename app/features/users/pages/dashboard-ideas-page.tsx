@@ -1,7 +1,26 @@
-import type { FC } from "react";
+import { IdeaCard } from "~/features/ideas/components/idea-card";
+import type { Route } from "./+types/dashboard-ideas-page";
 
-export const DashboardIdeasPage: FC = function DashboardIdeasPage() {
-  return <div>DashboardIdeasPage</div>;
+export const meta: Route.MetaFunction = () => {
+  return [{ title: "My Ideas | wemake" }];
 };
 
-export default DashboardIdeasPage;
+export default function DashboardIdeasPage() {
+  return (
+    <div className="space-y-10 h-full">
+      <h1 className="text-2xl font-semibold mb-6">Claimed Ideas</h1>
+      <div className="grid grid-cols-4 gap-6">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <IdeaCard
+            key={`ideaId-${index}`}
+            id={`ideaId-${index}`}
+            title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business."
+            viewCount={123}
+            createdAt="12 hours ago"
+            likeCount={12}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
