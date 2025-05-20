@@ -31,7 +31,7 @@ export default function MessagePage() {
         </CardHeader>
       </Card>
       <div className="py-10 overflow-y-scroll flex flex-col justify-start h-full">
-        {Array.from({ length: 5 }).map((_, index) => (
+        {Array.from({ length: 10 }).map((_, index) => (
           <MessagesBubble
             key={index}
             avatarUrl="https://github.com/saranghe41.png"

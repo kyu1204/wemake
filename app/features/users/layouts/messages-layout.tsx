@@ -15,7 +15,7 @@ export default function MessagesLayout() {
         <SidebarContent>
           <SidebarGroup>
             <SidebarMenu>
-              {Array.from({ length: 30 }, (_, index) => (
+              {Array.from({ length: 1 }, (_, index) => (
                 <MessagesCard
                   id={index}
                   key={index}
