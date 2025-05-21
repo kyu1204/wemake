@@ -1,4 +1,5 @@
 import {
+  jsonb,
   pgEnum,
   pgSchema,
   pgTable,
@@ -29,6 +30,11 @@ export const profiles = pgTable("profiles", {
   headline: text(),
   bio: text(),
   role: roles().default("developer").notNull(),
+  stats: jsonb().$type<{
+    followers: number;
+    following: number;
+  }>(),
+  views: jsonb(),
   created_at: timestamp().notNull().defaultNow(),
   updated_at: timestamp().notNull().defaultNow(),
 });
