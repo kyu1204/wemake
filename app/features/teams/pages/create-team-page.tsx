@@ -5,6 +5,7 @@ import InputPair from "~/common/components/intput-pair";
 import SelectPair from "~/common/components/select-pair";
 import { Button } from "~/common/components/ui/button";
 import type { Route } from "./+types/create-team-page";
+import { PRODUCT_STAGES } from "./constants";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -39,12 +40,10 @@ export default function SubmitTeamPage() {
             name="stage"
             placeholder="Select a stage"
             required
-            options={[
-              { label: "Idea", value: "idea" },
-              { label: "Prototype", value: "prototype" },
-              { label: "MVP", value: "mvp" },
-              { label: "Product", value: "product" },
-            ]}
+            options={PRODUCT_STAGES.map((stage) => ({
+              label: stage.label,
+              value: stage.value,
+            }))}
           />
           <InputPair
             label="What is the size of your team?"
