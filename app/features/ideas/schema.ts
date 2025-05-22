@@ -25,13 +25,16 @@ export const gptIdeas = pgTable("gpt_ideas", {
 export const gptIdeaLikes = pgTable(
   "gpt_idea_likes",
   {
-    gpt_idea_id: bigint({ mode: "number" }).references(
-      () => gptIdeas.gpt_idea_id,
-      { onDelete: "cascade" }
-    ),
-    profile_id: uuid().references(() => profiles.profile_id, {
-      onDelete: "cascade",
-    }),
+    gpt_idea_id: bigint({ mode: "number" })
+      .references(() => gptIdeas.gpt_idea_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    profile_id: uuid()
+      .references(() => profiles.profile_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
   },
   (table) => [primaryKey({ columns: [table.gpt_idea_id, table.profile_id] })]
 );
