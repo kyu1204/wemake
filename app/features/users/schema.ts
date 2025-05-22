@@ -23,7 +23,8 @@ const users = pgSchema("auth").table("users", {
 export const profiles = pgTable("profiles", {
   profile_id: uuid()
     .primaryKey()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
   name: text().notNull(),
   username: text().notNull(),
   avatar: text(),
@@ -40,11 +41,15 @@ export const profiles = pgTable("profiles", {
 });
 
 export const follows = pgTable("follows", {
-  follower_id: uuid().references(() => profiles.profile_id, {
-    onDelete: "cascade",
-  }),
-  following_id: uuid().references(() => profiles.profile_id, {
-    onDelete: "cascade",
-  }),
+  follower_id: uuid()
+    .references(() => profiles.profile_id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  following_id: uuid()
+    .references(() => profiles.profile_id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
   created_at: timestamp().notNull().defaultNow(),
 });
