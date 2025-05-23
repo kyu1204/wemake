@@ -57,6 +57,20 @@
       "when": 1747921266263,
       "tag": "0007_worthless_wolfpack",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1748014644204,
+      "tag": "0008_dapper_blazing_skull",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1748014725913,
+      "tag": "0009_quick_stryfe",
+      "breakpoints": true
     }
   ]
 }
