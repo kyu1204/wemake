@@ -1,10 +1,10 @@
 import {
   bigint,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
-  primaryKey,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { profiles } from "../users/schema";
@@ -22,6 +22,7 @@ export const posts = pgTable("posts", {
   content: text().notNull(),
   created_at: timestamp().notNull().defaultNow(),
   updated_at: timestamp().notNull().defaultNow(),
+  upvotes: bigint({ mode: "number" }).default(0),
   topic_id: bigint({ mode: "number" })
     .references(() => topics.topic_id, {
       onDelete: "cascade",
