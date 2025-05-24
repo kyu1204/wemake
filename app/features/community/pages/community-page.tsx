@@ -12,6 +12,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { PERIOD_OPTIONS, SORT_OPTIONS } from "../constants";
 import { Input } from "~/common/components/ui/input";
 import { PostCard } from "../components/post-card";
+import { getPosts, getTopics } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -20,7 +21,13 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export default function CommunityPage() {
+export const loader = async () => {
+  const topics = await getTopics();
+  const posts = await getPosts();
+  return { topics, posts };
+};
+
+export default function CommunityPage({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const sorting = searchParams.get("sorting") || "newest";
   const period = searchParams.get("period") || "all";
@@ -97,16 +104,17 @@ export default function CommunityPage() {
             </Button>
           </div>
           <div className="space-y-5">
-            {Array.from({ length: 11 }, (_, index) => (
+            {loaderData.posts.map((post) => (
               <PostCard
-                key={index}
-                id={`post-${index}`}
-                title={`Post ${index + 1}`}
-                author="Harry"
-                authorAvatarUrl="https://github.com/apple.png"
-                category="Productivity"
-                postedAt="12 hours ago"
+                key={post.post_id}
+                id={post.post_id}
+                title={post.title}
+                author={post.author.name}
+                authorAvatarUrl={post.author.avatar}
+                category={post.topic.name}
+                postedAt={post.created_at}
                 expanded={true}
+                votesCount={post.upvotes[0].count}
               />
             ))}
           </div>
@@ -116,20 +124,14 @@ export default function CommunityPage() {
             Topics
           </span>
           <div className="flex flex-col gap-2 items-start">
-            {[
-              "AI Tools",
-              "Design Tools",
-              "Dev Tools",
-              "Note Taking apps",
-              "Productivity Tools",
-            ].map((category) => (
+            {loaderData.topics.map((topic) => (
               <Button variant="link" asChild className="pl-0">
                 <Link
-                  key={category}
-                  to={`/community?topics=${category}`}
+                  key={topic.slug}
+                  to={`/community?topics=${topic.slug}`}
                   className="font-semibold"
                 >
-                  {category}
+                  {topic.name}
                 </Link>
               </Button>
             ))}
