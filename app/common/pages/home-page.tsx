@@ -11,6 +11,9 @@ import { Ripple } from "~/common/components/magicui/ripple";
 import { BlurFade } from "~/common/components/magicui/blur-fade";
 import { Marquee } from "../components/magicui/marquee";
 import { RetroGrid } from "~/common/components/magicui/retro-grid";
+import type { Route } from "./+types/home-page";
+import { getProductsByDateRange } from "~/features/products/queries";
+import { DateTime } from "luxon";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -18,7 +21,16 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function HomePage() {
+export const loader = async () => {
+  const dailyProducts = await getProductsByDateRange({
+    startDate: DateTime.now().startOf("day"),
+    endDate: DateTime.now().endOf("day"),
+    limit: 8,
+  });
+  return { dailyProducts };
+};
+
+export default function HomePage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-40">
       <div className="relative flex justify-center items-center h-[500px] w-full">
@@ -56,15 +68,15 @@ export default function HomePage() {
               </Link>
             </Button>
           </div>
-          {Array.from({ length: 8 }, (_, index) => (
+          {loaderData.dailyProducts.map((product) => (
             <ProductCard
-              key={index}
-              id={`product-${index}`}
-              name={`Product ${index + 1}`}
-              description={`Description for product ${index + 1}`}
-              commentCount={Math.floor(Math.random() * 100)}
-              viewCount={Math.floor(Math.random() * 1000)}
-              upvoteCount={Math.floor(Math.random() * 500)}
+              key={product.product_id.toString()}
+              id={product.product_id.toString()}
+              name={product.name}
+              description={product.description}
+              commentCount={product.reviews}
+              viewCount={product.views}
+              upvoteCount={product.upvotes}
             />
           ))}
         </div>
