@@ -170,7 +170,7 @@ export default function HomePage() {
               {Array.from({ length: 3 }, (_, index) => (
                 <PostCard
                   key={index}
-                  id={`post-${index}`}
+                  id={index}
                   title={`Post ${index + 1}`}
                   author="Harry"
                   authorAvatarUrl="https://github.com/apple.png"
@@ -183,7 +183,7 @@ export default function HomePage() {
               {Array.from({ length: 3 }, (_, index) => (
                 <PostCard
                   key={index}
-                  id={`post-${index}`}
+                  id={index}
                   title={`Post ${index + 1}`}
                   author="Harry"
                   authorAvatarUrl="https://github.com/apple.png"
@@ -196,7 +196,7 @@ export default function HomePage() {
               {Array.from({ length: 3 }, (_, index) => (
                 <PostCard
                   key={index}
-                  id={`post-${index}`}
+                  id={index}
                   title={`Post ${index + 1}`}
                   author="Harry"
                   authorAvatarUrl="https://github.com/apple.png"
