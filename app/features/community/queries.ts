@@ -3,6 +3,7 @@
 // import { asc, count, desc, eq } from "drizzle-orm";
 // import { profiles } from "../users/schema";
 
+import { DateTime } from "luxon";
 import client from "~/supa-client";
 
 // export const getTopics = async () => {
@@ -48,11 +49,58 @@ export const getTopics = async () => {
   return data;
 };
 
-export const getPosts = async () => {
-  const { data, error } = await client
+export const getPosts = async ({
+  limit,
+  sorting,
+  period = "all",
+  keyword,
+  topic,
+}: {
+  limit: number;
+  sorting: "newest" | "popular";
+  period?: "all" | "today" | "week" | "month" | "year";
+  keyword?: string;
+  topic?: string;
+}) => {
+  const query = client
     .from("community_post_list_view")
     .select("*")
-    .order("post_id");
+    .limit(limit);
+
+  if (sorting === "newest") {
+    query.order("created_at", { ascending: false });
+  } else if (sorting === "popular") {
+    if (period === "all") {
+      query.order("upvotes", { ascending: false });
+    } else {
+      const today = DateTime.now();
+      if (period === "today") {
+        query.gte("created_at", today.startOf("day").toISO());
+        query.lte("created_at", today.endOf("day").toISO());
+      } else if (period === "week") {
+        query.gte("created_at", today.startOf("week").toISO());
+        query.lte("created_at", today.endOf("week").toISO());
+      } else if (period === "month") {
+        query.gte("created_at", today.startOf("month").toISO());
+        query.lte("created_at", today.endOf("month").toISO());
+      } else if (period === "year") {
+        query.gte("created_at", today.startOf("year").toISO());
+        query.lte("created_at", today.endOf("year").toISO());
+      }
+      query.order("upvotes", { ascending: false });
+    }
+  }
+
+  if (keyword) {
+    query.ilike("title", `%${keyword}%`);
+  }
+
+  if (topic) {
+    query.eq("topic_slug", topic);
+  }
+
+  const { data, error } = await query;
+
   if (error) throw new Error(error.message);
   return data;
 };
