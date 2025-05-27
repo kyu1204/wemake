@@ -1,6 +1,6 @@
 import { Hero } from "~/common/components/hero";
 import type { Route } from "./+types/community-page";
-import { Form, Link, useSearchParams } from "react-router";
+import { data, Form, Link, useSearchParams } from "react-router";
 import { Button } from "~/common/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ import { PERIOD_OPTIONS, SORT_OPTIONS } from "../constants";
 import { Input } from "~/common/components/ui/input";
 import { PostCard } from "../components/post-card";
 import { getPosts, getTopics } from "../queries";
+import { z } from "zod";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -21,8 +22,37 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
-  const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
+const searchParamsSchema = z.object({
+  sorting: z.enum(["newest", "popular"]).optional().default("newest"),
+  period: z
+    .enum(["all", "today", "week", "month", "year"])
+    .optional()
+    .default("all"),
+  keyword: z.string().optional(),
+  topic: z.string().optional(),
+});
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const url = new URL(request.url);
+  const { success, data: parsedData } = searchParamsSchema.safeParse(
+    Object.fromEntries(url.searchParams)
+  );
+  if (!success) {
+    throw data(
+      { error_code: "invalid search params", message: "Invalid search params" },
+      { status: 400 }
+    );
+  }
+  const [topics, posts] = await Promise.all([
+    getTopics(),
+    getPosts({
+      limit: 20,
+      sorting: parsedData.sorting,
+      period: parsedData.period,
+      keyword: parsedData.keyword,
+      topic: parsedData.topic,
+    }),
+  ]);
   return { topics, posts };
 };
 
@@ -89,12 +119,11 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                   </DropdownMenu>
                 )}
               </div>
-              <Form>
+              <Form className="w-2/3">
                 <Input
                   type="text"
+                  name="keyword"
                   placeholder="Search for discussions"
-                  name="search"
-                  className="w-2/3"
                 />
               </Form>
             </div>
@@ -127,7 +156,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
               <Button variant="link" asChild className="pl-0">
                 <Link
                   key={topic.slug}
-                  to={`/community?topics=${topic.slug}`}
+                  to={`/community?topic=${topic.slug}`}
                   className="font-semibold"
                 >
                   {topic.name}

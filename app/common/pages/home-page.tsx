@@ -14,6 +14,7 @@ import { RetroGrid } from "~/common/components/magicui/retro-grid";
 import type { Route } from "./+types/home-page";
 import { getProductsByDateRange } from "~/features/products/queries";
 import { DateTime } from "luxon";
+import { getPosts } from "~/features/community/queries";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -27,7 +28,11 @@ export const loader = async () => {
     endDate: DateTime.now().endOf("day"),
     limit: 8,
   });
-  return { dailyProducts };
+  const posts = await getPosts({
+    limit: 8,
+    sorting: "newest",
+  });
+  return { dailyProducts, posts };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -179,41 +184,41 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
           </div>
           <div className="relative col-span-2 flex flex-col md:[perspective:500px] md:pb-40 overflow-hidden md:*:[transform:translateZ(-0px)_rotateY(-20deg)_rotateZ(10deg)]">
             <Marquee pauseOnHover className="[--duration:20s]">
-              {Array.from({ length: 3 }, (_, index) => (
+              {loaderData.posts.map((post) => (
                 <PostCard
-                  key={index}
-                  id={index}
-                  title={`Post ${index + 1}`}
-                  author="Harry"
-                  authorAvatarUrl="https://github.com/apple.png"
-                  category="Productivity"
-                  postedAt="12 hours ago"
+                  key={post.post_id}
+                  id={post.post_id}
+                  title={post.title}
+                  author={post.author}
+                  authorAvatarUrl={post.author_avatar}
+                  category={post.topic}
+                  postedAt={post.created_at}
                 />
               ))}
             </Marquee>
             <Marquee reverse pauseOnHover className="[--duration:20s]">
-              {Array.from({ length: 3 }, (_, index) => (
+              {loaderData.posts.map((post) => (
                 <PostCard
-                  key={index}
-                  id={index}
-                  title={`Post ${index + 1}`}
-                  author="Harry"
-                  authorAvatarUrl="https://github.com/apple.png"
-                  category="Productivity"
-                  postedAt="12 hours ago"
+                  key={post.post_id}
+                  id={post.post_id}
+                  title={post.title}
+                  author={post.author}
+                  authorAvatarUrl={post.author_avatar}
+                  category={post.topic}
+                  postedAt={post.created_at}
                 />
               ))}
             </Marquee>
             <Marquee pauseOnHover className="[--duration:20s]">
-              {Array.from({ length: 3 }, (_, index) => (
+              {loaderData.posts.map((post) => (
                 <PostCard
-                  key={index}
-                  id={index}
-                  title={`Post ${index + 1}`}
-                  author="Harry"
-                  authorAvatarUrl="https://github.com/apple.png"
-                  category="Productivity"
-                  postedAt="12 hours ago"
+                  key={post.post_id}
+                  id={post.post_id}
+                  title={post.title}
+                  author={post.author}
+                  authorAvatarUrl={post.author_avatar}
+                  category={post.topic}
+                  postedAt={post.created_at}
                 />
               ))}
             </Marquee>
