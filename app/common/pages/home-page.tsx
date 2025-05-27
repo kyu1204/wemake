@@ -15,6 +15,7 @@ import type { Route } from "./+types/home-page";
 import { getProductsByDateRange } from "~/features/products/queries";
 import { DateTime } from "luxon";
 import { getPosts } from "~/features/community/queries";
+import { getGptIdeas } from "~/features/ideas/queries";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -32,7 +33,10 @@ export const loader = async () => {
     limit: 8,
     sorting: "newest",
   });
-  return { dailyProducts, posts };
+  const ideas = await getGptIdeas({
+    limit: 8,
+  });
+  return { dailyProducts, posts, ideas };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -102,15 +106,15 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
             </div>
             <div className="md:absolute w-full flex justify-between md:h-full h-[75vh] top-0 left-0">
               <Marquee pauseOnHover vertical className="[--duration:20s]">
-                {Array.from({ length: 3 }, (_, index) => (
+                {loaderData.ideas.map((idea) => (
                   <IdeaCard
-                    key={index}
-                    id={`idea-${index}`}
-                    title="Personalized Learning Path Generator: An AI-driven platform that creates customized learning paths f..."
-                    viewCount={Math.floor(Math.random() * 1000)}
-                    createdAt="12 hours ago"
-                    likeCount={Math.floor(Math.random() * 100)}
-                    claimed={false}
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewCount={idea.views}
+                    createdAt={idea.created_at}
+                    likeCount={idea.likes}
+                    claimed={idea.is_claimed}
                   />
                 ))}
               </Marquee>
@@ -120,28 +124,28 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
                 vertical
                 className="[--duration:20s]"
               >
-                {Array.from({ length: 3 }, (_, index) => (
+                {loaderData.ideas.map((idea) => (
                   <IdeaCard
-                    key={index}
-                    id={`idea-${index}`}
-                    title="Smart Meeting Summarizer: An AI tool that joins virtual meetings, records discussions, and generates..."
-                    viewCount={Math.floor(Math.random() * 1000)}
-                    createdAt="12 hours ago"
-                    likeCount={Math.floor(Math.random() * 100)}
-                    claimed={false}
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewCount={idea.views}
+                    createdAt={idea.created_at}
+                    likeCount={idea.likes}
+                    claimed={idea.is_claimed}
                   />
                 ))}
               </Marquee>
               <Marquee pauseOnHover vertical className="[--duration:20s]">
-                {Array.from({ length: 3 }, (_, index) => (
+                {loaderData.ideas.map((idea) => (
                   <IdeaCard
-                    key={index}
-                    id={`idea-${index}`}
-                    title="Personalized Learning Path Generator: An AI-driven platform that creates customized learning paths f..."
-                    viewCount={Math.floor(Math.random() * 1000)}
-                    createdAt="12 hours ago"
-                    likeCount={Math.floor(Math.random() * 100)}
-                    claimed={false}
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewCount={idea.views}
+                    createdAt={idea.created_at}
+                    likeCount={idea.likes}
+                    claimed={idea.is_claimed}
                   />
                 ))}
               </Marquee>
@@ -151,15 +155,15 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
                 vertical
                 className="[--duration:20s]"
               >
-                {Array.from({ length: 3 }, (_, index) => (
+                {loaderData.ideas.map((idea) => (
                   <IdeaCard
-                    key={index}
-                    id={`idea-${index}`}
-                    title="Smart Meeting Summarizer: An AI tool that joins virtual meetings, records discussions, and generates..."
-                    viewCount={Math.floor(Math.random() * 1000)}
-                    createdAt="12 hours ago"
-                    likeCount={Math.floor(Math.random() * 100)}
-                    claimed={false}
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewCount={idea.views}
+                    createdAt={idea.created_at}
+                    likeCount={idea.likes}
+                    claimed={idea.is_claimed}
                   />
                 ))}
               </Marquee>
