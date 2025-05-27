@@ -11,7 +11,7 @@ export const getProductsByDateRange = async ({
   startDate: DateTime;
   endDate: DateTime;
   limit: number;
-  page: number;
+  page?: number;
 }) => {
   const { data, error } = await client
     .from("products")
@@ -28,7 +28,7 @@ export const getProductsByDateRange = async ({
     .gte("created_at", startDate.toISO())
     .lte("created_at", endDate.toISO())
     .order("stats->>upvotes", { ascending: false })
-    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+    .range((page - 1) * limit, page * limit - 1);
 
   if (error) throw new Error(error.message);
   return data;

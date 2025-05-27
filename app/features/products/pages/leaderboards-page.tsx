@@ -20,25 +20,21 @@ export const loader = async () => {
         startDate: DateTime.now().startOf("day"),
         endDate: DateTime.now().endOf("day"),
         limit: 8,
-        page: 1,
       }),
       getProductsByDateRange({
         startDate: DateTime.now().startOf("week"),
         endDate: DateTime.now().endOf("week"),
         limit: 8,
-        page: 1,
       }),
       getProductsByDateRange({
         startDate: DateTime.now().startOf("month"),
         endDate: DateTime.now().endOf("month"),
         limit: 8,
-        page: 1,
       }),
       getProductsByDateRange({
         startDate: DateTime.now().startOf("year"),
         endDate: DateTime.now().endOf("year"),
         limit: 8,
-        page: 1,
       }),
     ]);
 
