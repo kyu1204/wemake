@@ -7,6 +7,7 @@ import { Button } from "~/common/components/ui/button";
 import { ProductCard } from "../components/product-card";
 import { getProductPagesByDateRange, getProductsByDateRange } from "../queries";
 import type { Route } from "./+types/monthly-leaderboards-page";
+import { PAGE_SIZE } from "../constants";
 
 const paramsSchema = z.object({
   year: z.coerce.number(),
@@ -62,7 +63,7 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
   const products = await getProductsByDateRange({
     startDate: date.startOf("month"),
     endDate: date.endOf("month"),
-    limit: 10,
+    limit: PAGE_SIZE,
     page: Number(url.searchParams.get("page")) || 1,
   });
   const totalPages = await getProductPagesByDateRange({
