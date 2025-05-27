@@ -26,6 +26,7 @@ export const loader = async () => {
     startDate: DateTime.now().startOf("day"),
     endDate: DateTime.now().endOf("day"),
     limit: 8,
+    page: 1,
   });
   return { dailyProducts };
 };
