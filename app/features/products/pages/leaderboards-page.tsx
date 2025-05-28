@@ -59,8 +59,8 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
 
         {loaderData.dailyProducts.map((product) => (
           <ProductCard
-            key={product.product_id.toString()}
-            id={product.product_id.toString()}
+            key={product.product_id}
+            id={product.product_id}
             name={product.name}
             description={product.description}
             commentCount={product.reviews}
@@ -86,8 +86,8 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
 
         {loaderData.weeklyProducts.map((product) => (
           <ProductCard
-            key={product.product_id.toString()}
-            id={product.product_id.toString()}
+            key={product.product_id}
+            id={product.product_id}
             name={product.name}
             description={product.description}
             commentCount={product.reviews}
@@ -113,8 +113,8 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
 
         {loaderData.monthlyProducts.map((product) => (
           <ProductCard
-            key={product.product_id.toString()}
-            id={product.product_id.toString()}
+            key={product.product_id}
+            id={product.product_id}
             name={product.name}
             description={product.description}
             commentCount={product.reviews}
@@ -140,8 +140,8 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
 
         {loaderData.yearlyProducts.map((product) => (
           <ProductCard
-            key={product.product_id.toString()}
-            id={product.product_id.toString()}
+            key={product.product_id}
+            id={product.product_id}
             name={product.name}
             description={product.description}
             commentCount={product.reviews}
