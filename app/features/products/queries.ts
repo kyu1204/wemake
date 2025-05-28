@@ -2,6 +2,15 @@ import type { DateTime } from "luxon";
 import client from "~/supa-client";
 import { PAGE_SIZE } from "./constants";
 
+export const productListSelect = `
+        product_id,
+        name,
+        tagline,
+        reviews:stats->>reviews,
+        views:stats->>views,
+        upvotes:stats->>upvotes
+    `;
+
 export const getProductsByDateRange = async ({
   startDate,
   endDate,
@@ -15,16 +24,7 @@ export const getProductsByDateRange = async ({
 }) => {
   const { data, error } = await client
     .from("products")
-    .select(
-      `
-        product_id,
-        name,
-        description,
-        reviews:stats->>reviews,
-        views:stats->>views,
-        upvotes:stats->>upvotes
-    `
-    )
+    .select(productListSelect)
     .gte("created_at", startDate.toISO())
     .lte("created_at", endDate.toISO())
     .order("stats->>upvotes", { ascending: false })
@@ -93,16 +93,7 @@ export const getProductsByCategory = async ({
 }) => {
   const { data, error } = await client
     .from("products")
-    .select(
-      `
-        product_id,
-        name,
-        description,
-        reviews:stats->>reviews,
-        views:stats->>views,
-        upvotes:stats->>upvotes
-    `
-    )
+    .select(productListSelect)
     .eq("category_id", categoryId)
     .order("stats->>upvotes", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
@@ -120,6 +111,35 @@ export const getProductPagesByCategory = async ({
     .from("products")
     .select(`*`, { count: "exact", head: true })
     .eq("category_id", categoryId);
+  if (error) throw new Error(error.message);
+  if (!count) return 1;
+  return Math.ceil(count / PAGE_SIZE);
+};
+
+export const getProductsBySearch = async ({
+  query,
+  limit,
+  page = 1,
+}: {
+  query: string;
+  limit: number;
+  page?: number;
+}) => {
+  const { data, error } = await client
+    .from("products")
+    .select(productListSelect)
+    .or(`name.ilike.%${query}%,tagline.ilike.%${query}%`)
+    .order("stats->>upvotes", { ascending: false })
+    .range((page - 1) * limit, page * limit - 1);
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+export const getProductPagesBySearch = async ({ query }: { query: string }) => {
+  const { count, error } = await client
+    .from("products")
+    .select(`*`, { count: "exact", head: true })
+    .or(`name.ilike.%${query}%,tagline.ilike.%${query}%`);
   if (error) throw new Error(error.message);
   if (!count) return 1;
   return Math.ceil(count / PAGE_SIZE);
