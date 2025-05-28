@@ -85,6 +85,20 @@
       "when": 1748264457003,
       "tag": "0011_rare_eternals",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1748442833332,
+      "tag": "0012_mysterious_loa",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1748442920315,
+      "tag": "0013_ordinary_bullseye",
+      "breakpoints": true
     }
   ]
 }
