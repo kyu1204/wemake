@@ -122,7 +122,7 @@ export default function WeeklyLeaderboardsPage({
             key={product.product_id}
             id={product.product_id}
             name={product.name}
-            description={product.description}
+            description={product.tagline}
             commentCount={product.reviews}
             viewCount={product.views}
             upvoteCount={product.upvotes}
