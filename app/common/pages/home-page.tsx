@@ -17,6 +17,7 @@ import { DateTime } from "luxon";
 import { getPosts } from "~/features/community/queries";
 import { getGptIdeas } from "~/features/ideas/queries";
 import { getJobs } from "~/features/jobs/queries";
+import { getTeams } from "~/features/teams/queries";
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -25,22 +26,27 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
-  const dailyProducts = await getProductsByDateRange({
-    startDate: DateTime.now().startOf("day"),
-    endDate: DateTime.now().endOf("day"),
-    limit: 8,
-  });
-  const posts = await getPosts({
-    limit: 8,
-    sorting: "newest",
-  });
-  const ideas = await getGptIdeas({
-    limit: 8,
-  });
-  const jobs = await getJobs({
-    limit: 8,
-  });
-  return { dailyProducts, posts, ideas, jobs };
+  const [dailyProducts, posts, ideas, jobs, teams] = await Promise.all([
+    getProductsByDateRange({
+      startDate: DateTime.now().startOf("day"),
+      endDate: DateTime.now().endOf("day"),
+      limit: 8,
+    }),
+    getPosts({
+      limit: 8,
+      sorting: "newest",
+    }),
+    getGptIdeas({
+      limit: 8,
+    }),
+    getJobs({
+      limit: 8,
+    }),
+    getTeams({
+      limit: 8,
+    }),
+  ]);
+  return { dailyProducts, posts, ideas, jobs, teams };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -249,19 +255,15 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
           <RetroGrid />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:p-10 p-5 -mt-32 md:-mt-14 dark:bg-background bg-white">
-          {Array.from({ length: 9 }, (_, index) => (
+          {loaderData.teams.map((team) => (
             <BlurFade delay={0.5} inView>
               <TeamCard
-                key={index}
-                id={`team-${index}`}
-                leaderUsername="lynn"
-                leaderAvatarUrl="https://github.com/inthetiger.png"
-                positions={[
-                  "React Developer",
-                  "Backend Developer",
-                  "Product Manager",
-                ]}
-                projectDescription="a new social media platform"
+                key={team.team_id}
+                id={team.team_id}
+                leaderUsername={team.team_leader.username}
+                leaderAvatarUrl={team.team_leader.avatar}
+                positions={team.roles.split(",")}
+                projectDescription={team.product_description}
               />
             </BlurFade>
           ))}
