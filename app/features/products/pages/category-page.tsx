@@ -8,6 +8,8 @@ import {
   getProductsByCategory,
 } from "../queries";
 import { PAGE_SIZE } from "../constants";
+import { z } from "zod";
+import { data } from "react-router";
 
 export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
   return [
@@ -19,10 +21,22 @@ export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
   ];
 };
 
+export const paramsSchema = z.object({
+  categoryId: z.coerce.number(),
+});
+
 export const loader = async ({ params }: Route.LoaderArgs) => {
+  const { success, data: parsedData } = paramsSchema.safeParse(params);
+  if (!success) {
+    throw data(
+      { error_code: "invalid params", message: "Invalid params" },
+      { status: 400 }
+    );
+  }
+
   const [products, totalPages, category] = await Promise.all([
     getProductsByCategory({
-      categoryId: Number(params.categoryId),
+      categoryId: parsedData.categoryId,
       limit: PAGE_SIZE,
     }),
     getProductPagesByCategory({
