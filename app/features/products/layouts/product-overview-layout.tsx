@@ -108,6 +108,7 @@ export default function ProductOverviewLayout({
             product_id: loaderData.product.product_id,
             description: loaderData.product.description,
             how_it_works: loaderData.product.how_it_works,
+            reviews_count: loaderData.product.reviews,
           }}
         />
       </div>
