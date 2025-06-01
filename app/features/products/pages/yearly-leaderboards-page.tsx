@@ -112,7 +112,7 @@ export default function YearlyLeaderboardsPage({
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            commentCount={product.reviews}
+            reviewCount={product.reviews}
             viewCount={product.views}
             upvoteCount={product.upvotes}
           />

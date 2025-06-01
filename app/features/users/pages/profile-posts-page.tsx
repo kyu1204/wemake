@@ -1,5 +1,8 @@
 import { PostCard } from "~/features/community/components/post-card";
 import type { Route } from "./+types/profile-posts-page";
+import { data } from "react-router";
+import { getUserPosts } from "../queries";
+import { z } from "zod";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -9,18 +12,36 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export default function ProfilePostsPage() {
+export const paramsSchema = z.object({
+  username: z.string(),
+});
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const { success, data: parsedData } = paramsSchema.safeParse(params);
+
+  if (!success)
+    throw data(
+      { error_code: "invalid params", message: "Invalid params" },
+      { status: 400 }
+    );
+
+  const posts = await getUserPosts(parsedData.username);
+
+  return { posts };
+};
+
+export default function ProfilePostsPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-5">
-      {Array.from({ length: 5 }, (_, index) => (
+      {loaderData.posts.map((post) => (
         <PostCard
-          key={index}
-          id={`post-${index}`}
-          title={`Post ${index + 1}`}
-          author="Harry"
-          authorAvatarUrl="https://github.com/apple.png"
-          category="Productivity"
-          postedAt="12 hours ago"
+          key={post.post_id}
+          id={post.post_id}
+          title={post.title}
+          author={post.author_username}
+          authorAvatarUrl={post.author_avatar}
+          category={post.topic}
+          postedAt={post.created_at}
           expanded
         />
       ))}
