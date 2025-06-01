@@ -1,11 +1,3 @@
-import { ChevronUpIcon, DotIcon } from "lucide-react";
-import { data, Form, Link } from "react-router";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/common/components/ui/avatar";
-import { Badge } from "~/common/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,19 +5,24 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/common/components/ui/breadcrumb";
+import type { Route } from "./+types/post-page";
+import { data, Form, Link } from "react-router";
+import { ChevronUpIcon, DotIcon } from "lucide-react";
 import { Button } from "~/common/components/ui/button";
 import { Textarea } from "~/common/components/ui/textarea";
-import { Reply } from "../components/reply";
-import type { Route } from "./+types/post-page";
-import { z } from "zod";
-import { getPostById } from "../queries";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "~/common/components/ui/avatar";
+import { Badge } from "~/common/components/ui/badge";
+import { Reply } from "~/features/community/components/reply";
+import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
+import { z } from "zod";
 
-export const meta: Route.MetaFunction = () => {
-  return [
-    { title: "Post | wemake" },
-    { name: "description", content: "Post page" },
-  ];
+export const meta: Route.MetaFunction = ({ params }) => {
+  return [{ title: `${params.postId} | wemake` }];
 };
 
 export const paramsSchema = z.object({
@@ -41,8 +38,12 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
-  const post = await getPostById(parsedData.postId);
-  return { post };
+  const [post, replies] = await Promise.all([
+    getPostById(parsedData.postId),
+    getReplies(parsedData.postId),
+  ]);
+
+  return { post, replies };
 };
 
 export default function PostPage({ loaderData }: Route.ComponentProps) {
@@ -80,19 +81,19 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
               <ChevronUpIcon className="size-4 shrink-0" />
               <span>{loaderData.post.upvotes}</span>
             </Button>
-            <div className="space-y-20">
+            <div className="space-y-20 w-full">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold">{loaderData.post.title}</h2>
-                <div className="flex itmes-center gap-2 text-sm text-muted-foreground">
-                  <span>@{loaderData.post.author_name}</span>
-                  <DotIcon className="size-4" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{loaderData.post.author_name}</span>
+                  <DotIcon className="size-5" />
                   <span>
                     {DateTime.fromISO(loaderData.post.created_at).toRelative()}
                   </span>
-                  <DotIcon className="size-4" />
+                  <DotIcon className="size-5" />
                   <span>{loaderData.post.replies} replies</span>
                 </div>
-                <p className="text-muted-foreground max-w-3/4">
+                <p className="text-muted-foreground w-3/4">
                   {loaderData.post.content}
                 </p>
               </div>
@@ -101,13 +102,13 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                   <AvatarFallback>N</AvatarFallback>
                   <AvatarImage src="https://github.com/kyu1204.png" />
                 </Avatar>
-                <div className="flex flex-col gap-5 w-full items-end">
+                <div className="flex flex-col gap-5 items-end w-full">
                   <Textarea
                     placeholder="Write a reply"
                     className="w-full resize-none"
                     rows={5}
                   />
-                  <Button type="submit">Reply</Button>
+                  <Button>Reply</Button>
                 </div>
               </Form>
               <div className="space-y-10">
@@ -115,20 +116,22 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                   {loaderData.post.replies} Replies
                 </h4>
                 <div className="flex flex-col gap-5">
-                  <Reply
-                    avatarUrl="https://github.com/serranoarevalo.png"
-                    username="Nico"
-                    userLink="/users/@nico"
-                    timestamp="12 hours ago"
-                    content="I'm looking for a productivity tool that can help me get more done. I've tried a few different ones and I'm not sure which one is the best. best."
-                    topLevel
-                  />
+                  {loaderData.replies.map((reply) => (
+                    <Reply
+                      username={reply.user.name}
+                      avatarUrl={reply.user.avatar}
+                      content={reply.reply}
+                      timestamp={reply.created_at}
+                      topLevel={true}
+                      replies={reply.post_replies}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <aside className="col-span-2 boarder rounded-lg shadow-sm p-6 space-y-5">
+        <aside className="col-span-2 space-y-5 border rounded-lg p-6 shadow-sm">
           <div className="flex gap-5">
             <Avatar className="size-14">
               <AvatarFallback>{loaderData.post.author_name[0]}</AvatarFallback>
@@ -136,8 +139,8 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                 <AvatarImage src={loaderData.post.author_avatar} />
               ) : null}
             </Avatar>
-            <div className="flex flex-col">
-              <h4 className="font-medium text-lg">
+            <div className="flex flex-col items-start">
+              <h4 className="text-lg font-medium">
                 {loaderData.post.author_name}
               </h4>
               <Badge variant="secondary" className="capitalize">
@@ -145,12 +148,13 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
               </Badge>
             </div>
           </div>
-          <div className="gap-2 flex flex-col">
+          <div className="gap-2 text-sm flex flex-col">
             <span>
               🎂 Joined{" "}
-              {DateTime.fromISO(loaderData.post.author_created_at).toRelative()}
+              {DateTime.fromISO(loaderData.post.author_created_at).toRelative()}{" "}
+              ago
             </span>
-            <span>🚀 Launched {loaderData.post.replies} products</span>
+            <span>🚀 Launched {loaderData.post.products} products</span>
           </div>
           <Button variant="outline" className="w-full">
             Follow

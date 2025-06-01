@@ -1,53 +1,64 @@
 import { Form, Link } from "react-router";
+import { DotIcon, MessageCircleIcon } from "lucide-react";
+import { Button } from "~/common/components/ui/button";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "~/common/components/ui/avatar";
-import { Button } from "~/common/components/ui/button";
-import { MessageCircleIcon, DotIcon } from "lucide-react";
 import { useState } from "react";
 import { Textarea } from "~/common/components/ui/textarea";
-export interface ReplyProps {
-  avatarUrl: string;
+import { DateTime } from "luxon";
+
+interface ReplyProps {
   username: string;
-  userLink: string;
-  timestamp: string;
+  avatarUrl: string | null;
   content: string;
+  timestamp: string;
   topLevel: boolean;
+  replies?: {
+    post_reply_id: number;
+    reply: string;
+    created_at: string;
+    user: {
+      name: string;
+      avatar: string | null;
+      username: string;
+    };
+  }[];
 }
 
 export function Reply({
-  avatarUrl,
   username,
-  userLink,
-  timestamp,
+  avatarUrl,
   content,
+  timestamp,
   topLevel,
+  replies,
 }: ReplyProps) {
   const [replying, setReplying] = useState(false);
-
   const toggleReplying = () => setReplying((prev) => !prev);
-
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-2 w-full">
       <div className="flex items-start gap-5 w-2/3">
         <Avatar className="size-14">
-          <AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
-          <AvatarImage src={avatarUrl} />
+          <AvatarFallback>{username[0]}</AvatarFallback>
+          {avatarUrl ? <AvatarImage src={avatarUrl} /> : null}
         </Avatar>
-        <div className="flex flex-col gap-4 items-start">
+        <div className="flex flex-col gap-2 items-start w-full">
           <div className="flex gap-2 items-center">
-            <Link to={userLink}>
+            <Link to={`/users/${username}`}>
               <h4 className="font-medium">{username}</h4>
             </Link>
-            <DotIcon className="size-4" />
-            <span className="text-xs text-muted-foreground">{timestamp}</span>
+            <DotIcon className="size-5" />
+            <span className="text-xs text-muted-foreground">
+              {DateTime.fromISO(timestamp).toRelative()}
+            </span>
           </div>
           <p className="text-muted-foreground">{content}</p>
           <Button variant="ghost" className="self-end" onClick={toggleReplying}>
             <MessageCircleIcon className="size-4" />
-            <span>Reply</span>
+            Reply
           </Button>
         </div>
       </div>
@@ -57,26 +68,27 @@ export function Reply({
             <AvatarFallback>N</AvatarFallback>
             <AvatarImage src="https://github.com/kyu1204.png" />
           </Avatar>
-          <div className="flex flex-col gap-5 w-full items-end">
+          <div className="flex flex-col gap-5 items-end w-full">
             <Textarea
               placeholder="Write a reply"
               className="w-full resize-none"
               rows={5}
             />
-            <Button type="submit">Reply</Button>
+            <Button>Reply</Button>
           </div>
         </Form>
       )}
-      {topLevel && (
+      {topLevel && replies && (
         <div className="pl-20 w-full">
-          <Reply
-            avatarUrl="https://github.com/serranoarevalo.png"
-            username="Nico"
-            userLink="/users/@nico"
-            timestamp="12 hours ago"
-            content="I'm looking for a productivity tool that can help me get more done. I've tried a few different ones and I'm not sure which one is the best. best."
-            topLevel={false}
-          />
+          {replies.map((reply) => (
+            <Reply
+              username={reply.user.name}
+              avatarUrl={reply.user.avatar}
+              content={reply.reply}
+              timestamp={reply.created_at}
+              topLevel={false}
+            />
+          ))}
         </div>
       )}
     </div>
