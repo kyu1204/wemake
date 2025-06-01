@@ -905,6 +905,7 @@ export type Database = {
           content: string | null
           created_at: string | null
           post_id: number | null
+          products: number | null
           profile_id: string | null
           replies: number | null
           title: string | null
