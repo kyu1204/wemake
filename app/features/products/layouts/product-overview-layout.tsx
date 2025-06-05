@@ -1,5 +1,5 @@
 import { ChevronUpIcon, StarIcon } from "lucide-react";
-import { data, NavLink, Outlet } from "react-router";
+import { data, Link, NavLink, Outlet } from "react-router";
 import { Button, buttonVariants } from "~/common/components/ui/button";
 import { cn } from "~/lib/utils";
 import type { Route } from "./+types/product-overview-layout";
@@ -69,8 +69,14 @@ export default function ProductOverviewLayout({
             variant={"secondary"}
             size="lg"
             className="text-lg h-14 px-10"
+            asChild
           >
-            Visit Website
+            <Link
+              to={`/products/${loaderData.product.product_id}/visit`}
+              className="flex items-center gap-2"
+            >
+              Visit Website
+            </Link>
           </Button>
           <Button size="lg" className="text-lg h-14 px-10">
             <ChevronUpIcon className="size-4" />
