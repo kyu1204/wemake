@@ -33,6 +33,27 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_id: string
+          event_type: Database["public"]["Enums"]["event_type"] | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_id?: string
+          event_type?: Database["public"]["Enums"]["event_type"] | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_id?: string
+          event_type?: Database["public"]["Enums"]["event_type"] | null
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string
@@ -357,6 +378,13 @@ export type Database = {
             foreignKeyName: "notifications_post_id_posts_post_id_fk"
             columns: ["post_id"]
             isOneToOne: false
+            referencedRelation: "community_post_detail"
+            referencedColumns: ["post_id"]
+          },
+          {
+            foreignKeyName: "notifications_post_id_posts_post_id_fk"
+            columns: ["post_id"]
+            isOneToOne: false
             referencedRelation: "community_post_detail_view"
             referencedColumns: ["post_id"]
           },
@@ -422,7 +450,7 @@ export type Database = {
         Row: {
           created_at: string
           parent_id: number | null
-          post_id: number
+          post_id: number | null
           post_reply_id: number
           profile_id: string
           reply: string
@@ -431,7 +459,7 @@ export type Database = {
         Insert: {
           created_at?: string
           parent_id?: number | null
-          post_id: number
+          post_id?: number | null
           post_reply_id?: never
           profile_id: string
           reply: string
@@ -440,7 +468,7 @@ export type Database = {
         Update: {
           created_at?: string
           parent_id?: number | null
-          post_id?: number
+          post_id?: number | null
           post_reply_id?: never
           profile_id?: string
           reply?: string
@@ -453,6 +481,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "post_replies"
             referencedColumns: ["post_reply_id"]
+          },
+          {
+            foreignKeyName: "post_replies_post_id_posts_post_id_fk"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_post_detail"
+            referencedColumns: ["post_id"]
           },
           {
             foreignKeyName: "post_replies_post_id_posts_post_id_fk"
@@ -505,6 +540,13 @@ export type Database = {
           profile_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "post_upvotes_post_id_posts_post_id_fk"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_post_detail"
+            referencedColumns: ["post_id"]
+          },
           {
             foreignKeyName: "post_upvotes_post_id_posts_post_id_fk"
             columns: ["post_id"]
@@ -587,6 +629,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "posts_topic_id_topics_topic_id_fk"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "community_post_detail"
+            referencedColumns: ["topic_id"]
           },
           {
             foreignKeyName: "posts_topic_id_topics_topic_id_fk"
@@ -703,14 +752,14 @@ export type Database = {
             referencedColumns: ["category_id"]
           },
           {
-            foreignKeyName: "products_profile_id_profiles_profile_id_fk"
+            foreignKeyName: "products_to_profiles"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "community_post_detail_view"
             referencedColumns: ["profile_id"]
           },
           {
-            foreignKeyName: "products_profile_id_profiles_profile_id_fk"
+            foreignKeyName: "products_to_profiles"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -896,6 +945,25 @@ export type Database = {
       }
     }
     Views: {
+      community_post_detail: {
+        Row: {
+          author_avatar: string | null
+          author_created_at: string | null
+          author_name: string | null
+          author_role: Database["public"]["Enums"]["roles"] | null
+          content: string | null
+          created_at: string | null
+          post_id: number | null
+          products: number | null
+          replies: number | null
+          title: string | null
+          topic_id: number | null
+          topic_name: string | null
+          topic_slug: string | null
+          upvotes: number | null
+        }
+        Relationships: []
+      }
       community_post_detail_view: {
         Row: {
           author_avatar: string | null
@@ -959,9 +1027,16 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      track_event: {
+        Args: {
+          event_type: Database["public"]["Enums"]["event_type"]
+          event_data: Json
+        }
+        Returns: undefined
+      }
     }
     Enums: {
+      event_type: "product_view" | "product_visit" | "profile_view"
       job_types: "full-time" | "part-time" | "freelance" | "internship"
       locations: "remote" | "in-person" | "hybrid"
       notification_type: "follow" | "review" | "reply" | "mention"
@@ -1095,6 +1170,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      event_type: ["product_view", "product_visit", "profile_view"],
       job_types: ["full-time", "part-time", "freelance", "internship"],
       locations: ["remote", "in-person", "hybrid"],
       notification_type: ["follow", "review", "reply", "mention"],
