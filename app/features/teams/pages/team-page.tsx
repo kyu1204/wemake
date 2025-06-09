@@ -1,5 +1,7 @@
+import { data, Form } from "react-router";
+import { z } from "zod";
 import { Hero } from "~/common/components/hero";
-import type { Route } from "./+types/team-page";
+import InputPair from "~/common/components/intput-pair";
 import {
   Avatar,
   AvatarFallback,
@@ -7,16 +9,15 @@ import {
 } from "~/common/components/ui/avatar";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
-import { data, Form } from "react-router";
-import InputPair from "~/common/components/intput-pair";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "~/common/components/ui/card";
-import { z } from "zod";
+import { makeSSRClient } from "~/supa-client";
 import { getTeamById } from "../queries";
+import type { Route } from "./+types/team-page";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -30,7 +31,8 @@ export const paramsSchema = z.object({
   teamId: z.coerce.number(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -39,7 +41,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
-  const team = await getTeamById(parsedData.teamId);
+  const team = await getTeamById(client, parsedData.teamId);
 
   return { team };
 };

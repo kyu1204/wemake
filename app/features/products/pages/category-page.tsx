@@ -1,15 +1,16 @@
+import { data } from "react-router";
+import { z } from "zod";
 import { Hero } from "~/common/components/hero";
 import ProductPagination from "~/common/components/pagination";
+import { makeSSRClient } from "~/supa-client";
 import { ProductCard } from "../components/product-card";
-import type { Route } from "./+types/category-page";
+import { PAGE_SIZE } from "../constants";
 import {
   getCategory,
   getProductPagesByCategory,
   getProductsByCategory,
 } from "../queries";
-import { PAGE_SIZE } from "../constants";
-import { z } from "zod";
-import { data } from "react-router";
+import type { Route } from "./+types/category-page";
 
 export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
   return [
@@ -25,7 +26,8 @@ export const paramsSchema = z.object({
   categoryId: z.coerce.number(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(params);
   if (!success) {
     throw data(
@@ -35,14 +37,14 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
   }
 
   const [products, totalPages, category] = await Promise.all([
-    getProductsByCategory({
+    getProductsByCategory(client, {
       categoryId: parsedData.categoryId,
       limit: PAGE_SIZE,
     }),
-    getProductPagesByCategory({
+    getProductPagesByCategory(client, {
       categoryId: Number(params.categoryId),
     }),
-    getCategory({
+    getCategory(client, {
       categoryId: Number(params.categoryId),
     }),
   ]);

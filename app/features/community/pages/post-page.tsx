@@ -20,6 +20,7 @@ import { Reply } from "~/features/community/components/reply";
 import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
 import { z } from "zod";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = ({ params }) => {
   return [{ title: `${params.postId} | wemake` }];
@@ -29,7 +30,7 @@ export const paramsSchema = z.object({
   postId: z.coerce.number(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -38,9 +39,11 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
+  const { client } = makeSSRClient(request);
+
   const [post, replies] = await Promise.all([
-    getPostById(parsedData.postId),
-    getReplies(parsedData.postId),
+    getPostById(client, parsedData.postId),
+    getReplies(client, parsedData.postId),
   ]);
 
   return { post, replies };

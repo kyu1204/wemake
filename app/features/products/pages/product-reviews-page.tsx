@@ -1,11 +1,12 @@
+import { data, useOutletContext } from "react-router";
+import { z } from "zod";
 import { Button } from "~/common/components/ui/button";
 import { Dialog, DialogTrigger } from "~/common/components/ui/dialog";
+import { makeSSRClient } from "~/supa-client";
 import { CreateReviewDialog } from "../components/create-review-dialog";
 import { ReviewCard } from "../components/review-card";
-import { data, useOutletContext } from "react-router";
-import type { Route } from "./+types/product-reviews-page";
 import { getReviewsByProductId } from "../queries";
-import { z } from "zod";
+import type { Route } from "./+types/product-reviews-page";
 
 export function meta() {
   return [
@@ -18,7 +19,8 @@ export const paramsSchema = z.object({
   productId: z.coerce.number(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -27,7 +29,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
-  const reviews = await getReviewsByProductId(parsedData.productId);
+  const reviews = await getReviewsByProductId(client, parsedData.productId);
   return { reviews };
 };
 

@@ -1,8 +1,9 @@
+import { data } from "react-router";
 import { z } from "zod";
 import { ProductCard } from "~/features/products/components/product-card";
-import type { Route } from "./+types/profile-products-page";
-import { data } from "react-router";
+import { makeSSRClient } from "~/supa-client";
 import { getUserProducts } from "../queries";
+import type { Route } from "./+types/profile-products-page";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -16,7 +17,8 @@ export const paramsSchema = z.object({
   username: z.string(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -25,7 +27,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
-  const products = await getUserProducts(parsedData.username);
+  const products = await getUserProducts(client, parsedData.username);
 
   return { products };
 };

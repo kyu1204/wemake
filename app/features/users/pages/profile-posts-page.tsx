@@ -1,8 +1,9 @@
-import { PostCard } from "~/features/community/components/post-card";
-import type { Route } from "./+types/profile-posts-page";
 import { data } from "react-router";
-import { getUserPosts } from "../queries";
 import { z } from "zod";
+import { PostCard } from "~/features/community/components/post-card";
+import { makeSSRClient } from "~/supa-client";
+import { getUserPosts } from "../queries";
+import type { Route } from "./+types/profile-posts-page";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -16,7 +17,8 @@ export const paramsSchema = z.object({
   username: z.string(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -25,7 +27,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
-  const posts = await getUserPosts(parsedData.username);
+  const posts = await getUserPosts(client, parsedData.username);
 
   return { posts };
 };

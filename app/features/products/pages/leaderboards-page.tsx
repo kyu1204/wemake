@@ -1,10 +1,11 @@
+import { DateTime } from "luxon";
 import { Link } from "react-router";
 import { Hero } from "~/common/components/hero";
 import { Button } from "~/common/components/ui/button";
+import { makeSSRClient } from "~/supa-client";
 import { ProductCard } from "../components/product-card";
-import type { Route } from "./+types/leaderboards-page";
 import { getProductsByDateRange } from "../queries";
-import { DateTime } from "luxon";
+import type { Route } from "./+types/leaderboards-page";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -13,25 +14,26 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const [dailyProducts, weeklyProducts, monthlyProducts, yearlyProducts] =
     await Promise.all([
-      getProductsByDateRange({
+      getProductsByDateRange(client, {
         startDate: DateTime.now().startOf("day"),
         endDate: DateTime.now().endOf("day"),
         limit: 8,
       }),
-      getProductsByDateRange({
+      getProductsByDateRange(client, {
         startDate: DateTime.now().startOf("week"),
         endDate: DateTime.now().endOf("week"),
         limit: 8,
       }),
-      getProductsByDateRange({
+      getProductsByDateRange(client, {
         startDate: DateTime.now().startOf("month"),
         endDate: DateTime.now().endOf("month"),
         limit: 8,
       }),
-      getProductsByDateRange({
+      getProductsByDateRange(client, {
         startDate: DateTime.now().startOf("year"),
         endDate: DateTime.now().endOf("year"),
         limit: 8,

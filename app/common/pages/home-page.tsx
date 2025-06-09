@@ -18,6 +18,8 @@ import { getPosts } from "~/features/community/queries";
 import { getGptIdeas } from "~/features/ideas/queries";
 import { getJobs } from "~/features/jobs/queries";
 import { getTeams } from "~/features/teams/queries";
+import { makeSSRClient } from "~/supa-client";
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | wemake" },
@@ -25,24 +27,25 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
   const [dailyProducts, posts, ideas, jobs, teams] = await Promise.all([
-    getProductsByDateRange({
+    getProductsByDateRange(client, {
       startDate: DateTime.now().startOf("day"),
       endDate: DateTime.now().endOf("day"),
       limit: 8,
     }),
-    getPosts({
+    getPosts(client, {
       limit: 8,
       sorting: "newest",
     }),
-    getGptIdeas({
+    getGptIdeas(client, {
       limit: 8,
     }),
-    getJobs({
+    getJobs(client, {
       limit: 8,
     }),
-    getTeams({
+    getTeams(client, {
       limit: 8,
     }),
   ]);
@@ -89,8 +92,8 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
           </div>
           {loaderData.dailyProducts.map((product) => (
             <ProductCard
-              key={product.product_id.toString()}
-              id={product.product_id.toString()}
+              key={product.product_id}
+              id={product.product_id}
               name={product.name}
               description={product.tagline}
               reviewCount={product.reviews}
