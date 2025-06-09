@@ -1,13 +1,14 @@
+import { useState } from "react";
 import { data, useSearchParams } from "react-router";
+import { z } from "zod";
 import { Hero } from "~/common/components/hero";
 import { Button } from "~/common/components/ui/button";
 import { cn } from "~/lib/utils";
+import { makeSSRClient } from "~/supa-client";
 import { JobCard } from "../components/job-card";
 import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGES } from "../constants";
-import type { Route } from "./+types/jobs-page";
 import { getJobs } from "../queries";
-import { z } from "zod";
-import { useEffect, useState } from "react";
+import type { Route } from "./+types/jobs-page";
 
 export const searchParamsSchema = z.object({
   type: z
@@ -38,7 +39,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     );
   }
 
-  const jobs = await getJobs({
+  const { client } = makeSSRClient(request);
+
+  const jobs = await getJobs(client, {
     limit: 20,
     type: parsedData.type as (typeof JOB_TYPES)[number]["value"],
     location: parsedData.location as (typeof LOCATION_TYPES)[number]["value"],

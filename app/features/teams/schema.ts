@@ -8,7 +8,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { PRODUCT_STAGES } from "./pages/constants";
+import { PRODUCT_STAGES } from "./constants";
 import { sql } from "drizzle-orm";
 import { profiles } from "../users/schema";
 

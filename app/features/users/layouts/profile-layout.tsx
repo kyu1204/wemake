@@ -17,6 +17,7 @@ import {
 } from "~/common/components/ui/dialog";
 import { Textarea } from "~/common/components/ui/textarea";
 import { cn } from "~/lib/utils";
+import { makeSSRClient } from "~/supa-client";
 import { getUserByUsername } from "../queries";
 import type { Route } from "./+types/profile-layout";
 
@@ -24,7 +25,8 @@ export const paramsSchema = z.object({
   username: z.string(),
 });
 
-export const loader = async ({ params }: { params: { username: string } }) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -33,7 +35,7 @@ export const loader = async ({ params }: { params: { username: string } }) => {
       { status: 400 }
     );
 
-  const user = await getUserByUsername(parsedData.username);
+  const user = await getUserByUsername(client, parsedData.username);
 
   return { user };
 };

@@ -1,13 +1,14 @@
-import type { Route } from "./+types/product-visit-page";
-import client from "~/supa-client";
-import { z } from "zod";
 import { data, redirect } from "react-router";
+import { z } from "zod";
+import { makeSSRClient } from "~/supa-client";
+import type { Route } from "./+types/product-visit-page";
 
 export const paramsSchema = z.object({
   productId: z.coerce.number(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedParams } = paramsSchema.safeParse(params);
   if (!success) {
     throw data(

@@ -4,10 +4,11 @@ import { Hero } from "~/common/components/hero";
 import ProductPagination from "~/common/components/pagination";
 import { Button } from "~/common/components/ui/button";
 import { Input } from "~/common/components/ui/input";
+import { makeSSRClient } from "~/supa-client";
 import { ProductCard } from "../components/product-card";
-import type { Route } from "./+types/search-page";
-import { getProductPagesBySearch, getProductsBySearch } from "../queries";
 import { PAGE_SIZE } from "../constants";
+import { getProductPagesBySearch, getProductsBySearch } from "../queries";
+import type { Route } from "./+types/search-page";
 export const meta: MetaFunction = () => {
   return [
     { title: "Search Products | wemake" },
@@ -21,6 +22,7 @@ const paramsSchema = z.object({
 });
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const url = new URL(request.url);
   const { success, data: parsedData } = paramsSchema.safeParse(
     Object.fromEntries(url.searchParams)
@@ -35,12 +37,12 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   }
 
   const [products, totalPages] = await Promise.all([
-    getProductsBySearch({
+    getProductsBySearch(client, {
       query: parsedData.query,
       limit: PAGE_SIZE,
       page: parsedData.page,
     }),
-    getProductPagesBySearch({
+    getProductPagesBySearch(client, {
       query: parsedData.query,
     }),
   ]);

@@ -1,11 +1,12 @@
 import { DotIcon } from "lucide-react";
+import { DateTime } from "luxon";
+import { data } from "react-router";
+import { z } from "zod";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
-import type { Route } from "./+types/job-page";
-import { z } from "zod";
-import { data } from "react-router";
+import { makeSSRClient } from "~/supa-client";
 import { getJobById } from "../queries";
-import { DateTime } from "luxon";
+import type { Route } from "./+types/job-page";
 
 export const meta: Route.MetaFunction = () => [
   { title: "Job Details | wemake" },
@@ -15,7 +16,7 @@ export const paramsSchema = z.object({
   jobId: z.coerce.number(),
 });
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
   const { success, data: parsedData } = paramsSchema.safeParse(params);
 
   if (!success)
@@ -24,7 +25,9 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
 
-  const job = await getJobById(parsedData.jobId);
+  const { client } = makeSSRClient(request);
+
+  const job = await getJobById(client, parsedData.jobId);
   return { job };
 };
 
